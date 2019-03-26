@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package data;
+
+message EchoMessage {
+    string greeting = 1;
+}
+
+service Echo {
+    rpc SayHello(EchoMessage) returns (EchoMessage) {}
+}
