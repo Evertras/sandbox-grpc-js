@@ -9,7 +9,6 @@ clean:
 	rm -f $(BINARY_NAME)
 	rm -f front/game.js
 	rm -f front/game.js.map
-	rm -f front/lib.wasm
 	rm -rf $(GO_PROTO_BUILD_DIR)
 	rm -rf messages/tsmessage
 
@@ -18,7 +17,7 @@ test: node_modules protos
 	npm test
 	go test -v ./lib/...
 
-build: protos
+build: protos front/game.js
 	CG_ENABLED=0 go build -o $(BINARY_NAME) -v ./cmd/server/main.go
 
 bench:
