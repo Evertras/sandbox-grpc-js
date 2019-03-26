@@ -1,4 +1,5 @@
 # Binaries for programs and plugins
+awf
 *.exe
 *.exe~
 *.dll
@@ -11,5 +12,20 @@
 # Output of the go coverage tool, specifically when used with LiteIDE
 *.out
 
-node_modules
-./sandbox-grpc-js
+# WASM build
+front/lib.wasm
+
+# Protobuf compilation
+messages/*message/
+lib/data
+
+# Output of generate
+lib/static/build.go
+
+# Javascript stuff
+node_modules/
+front/build
+
+# Build artifact for Javascript
+front/game.js
+front/game.js.map
