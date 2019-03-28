@@ -10,7 +10,7 @@ clean:
 	rm -f front/game.js
 	rm -f front/game.js.map
 	rm -rf $(GO_PROTO_BUILD_DIR)
-	rm -rf messages/tsmessage
+	rm -rf front/src/proto
 
 test: node_modules protos
 	npx tslint -p .
@@ -29,13 +29,13 @@ run-dev:
 docker: clean build
 	docker build --rm -t evertras/$(BINARY_NAME) .
 
-protos: $(GO_PROTO_BUILD_DIR) messages/tsmessage
+protos: $(GO_PROTO_BUILD_DIR) front/src/proto
 
 # These are not files, so always run them when asked to
 .PHONY: all clean test build bench run-dev protos docker
 
 # Actual files/directories that must be generated
-front/game.js: node_modules messages/tsmessage $(TS_FILES)
+front/game.js: node_modules front/src/proto $(TS_FILES)
 	npx webpack || (rm -f front/game.js && exit 1)
 
 node_modules:
@@ -46,7 +46,7 @@ $(GO_PROTO_BUILD_DIR): messages/*.proto
 	mkdir -p $(GO_PROTO_BUILD_DIR)
 	protoc --twirp_out=./lib --go_out=./lib ./messages/*.proto || (rmdir $(GO_PROTO_BUILD_DIR) && exit 1)
 
-messages/tsmessage: node_modules messages/*.proto
+front/src/proto: node_modules messages/*.proto
 	rm -rf front/src/proto
 	mkdir front/src/proto
 	npx pbjs -t static-module -w commonjs messages/echo.proto -o front/src/proto/echo.pb.js || (rm -rf front/src/proto && exit 1)
