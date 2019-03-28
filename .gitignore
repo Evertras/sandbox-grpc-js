@@ -1,5 +1,6 @@
 # Binaries for programs and plugins
 sandbox-grpc-js
+server
 *.exe
 *.exe~
 *.dll
@@ -29,3 +30,6 @@ front/build
 # Build artifact for Javascript
 front/game.js
 front/game.js.map
+
+# Taskfile checksums
+.task

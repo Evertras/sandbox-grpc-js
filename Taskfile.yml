@@ -1,0 +1,35 @@
+version: '2'
+
+includes:
+  front: ./tasks/front.yml
+  back: ./tasks/back.yml
+
+tasks:
+  default:
+    cmds:
+      - task: test
+      - task: build
+
+  clean:
+    deps: [ front:clean, back:clean ]
+  
+  test:
+    cmds:
+      - task: front:test
+      - task: back:test
+ 
+  build:
+    deps: [ front:build, back:build ]
+
+  base1:
+    cmds:
+      - echo 'Hello from base1'
+  
+  base2:
+    deps: [ base1 ]
+  
+  base3:
+    deps: [ base1 ]
+  
+  final:
+    deps: [ base2, base3 ]

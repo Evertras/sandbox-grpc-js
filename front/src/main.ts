@@ -12,4 +12,3 @@ async function echo(greeting: string) {
 }
 
 echo('hello');
-

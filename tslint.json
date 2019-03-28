@@ -8,12 +8,13 @@
         "no-console": false,
         "object-literal-sort-keys": false,
         "quotemark": [true, "single"],
-        "no-angle-bracket-type-assertion": false,
+        "no-angle-bracket-type-assertion": false
     },
     "rulesDirectory": [],
     "linterOptions": {
         "exclude": [
-            "node_modules"
+            "node_modules",
+            "./front/src/proto/*.ts"
         ]
     }
 }

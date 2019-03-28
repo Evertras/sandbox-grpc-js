@@ -1,0 +1,32 @@
+version: '2'
+
+tasks:
+  clean:
+    cmds:
+      - rm -rf ./lib/messages
+      - rm -f server
+
+  proto:
+    sources:
+      - ./messages/*.proto
+    generates:
+      - ./lib/messages
+    cmds:
+      - rm -rf ./lib/messages
+      - mkdir -p ./lib/messages
+      - protoc --twirp_out=./lib --go_out=./lib ./messages/*.proto || (rmdir ./lib/messages && exit 1)
+  
+  build:
+    deps: [ proto ]
+    env:
+      CGO_ENABLED: 0
+    cmds:
+      - go build -o server -v ./cmd/server/main.go
+  
+  test:
+    deps: [ proto ]
+    sources:
+      - ./lib/**/*.go
+    method: checksum
+    cmds:
+      - go test -v ./lib/...
