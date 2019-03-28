@@ -1,7 +1,7 @@
 BINARY_NAME=sandbox-grpc-js
 TS_FILES=$(shell find front/src -name "*.ts")
 WASM_FILES=$(shell find lib -name "*.go" ! -path "lib/static/*" ! -path "lib/server/*" ! -name "*_test.go")
-GO_PROTO_BUILD_DIR=lib/data
+GO_PROTO_BUILD_DIR=lib/messages
 
 all: test build
 
@@ -44,12 +44,11 @@ node_modules:
 $(GO_PROTO_BUILD_DIR): messages/*.proto
 	rm -rf $(GO_PROTO_BUILD_DIR)
 	mkdir -p $(GO_PROTO_BUILD_DIR)
-	@# Slightly weird PWD syntax here to deal with Windows gitbash mangling it otherwise.
-	@# This is intentional, don't remove the initial slash!
-	docker run -v /${PWD}:/defs namely/protoc-all -d messages -l go -o $(GO_PROTO_BUILD_DIR) || (rm -rf $(GO_PROTO_BUILD_DIR) && exit 1)
+	protoc --twirp_out=./lib --go_out=./lib ./messages/*.proto || (rmdir $(GO_PROTO_BUILD_DIR) && exit 1)
 
 messages/tsmessage: node_modules messages/*.proto
-	rm -rf messages/tsmessage
-	mkdir messages/tsmessage
-	npx pbjs -t static-module -w commonjs messages/*.proto > messages/tsmessage/messages.js || (rm -rf messages/tsmessage && exit 1)
-	npx pbts -o messages/tsmessage/messages.d.ts messages/tsmessage/messages.js || (rm -rf messages/tsmessage && exit 1)
+	rm -rf front/src/proto
+	mkdir front/src/proto
+	npx pbjs -t static-module -w commonjs messages/echo.proto -o front/src/proto/echo.pb.js || (rm -rf front/src/proto && exit 1)
+	npx pbts -o front/src/proto/echo.pb.d.ts front/src/proto/echo.pb.js || (rm -rf front/src/proto && exit 1)
+	protoc --twirp_typescript_out=library=pbjs:./front/src/proto messages/echo.proto

@@ -16,8 +16,8 @@ sandbox-grpc-js
 front/lib.wasm
 
 # Protobuf compilation
-messages/*message/
-lib/data
+lib/messages
+front/src/proto
 
 # Output of generate
 lib/static/build.go
