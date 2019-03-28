@@ -4,6 +4,8 @@ includes:
   front: ./tasks/front.yml
   back: ./tasks/back.yml
 
+output: group
+
 tasks:
   default:
     cmds:
@@ -14,9 +16,7 @@ tasks:
     deps: [ front:clean, back:clean ]
   
   test:
-    cmds:
-      - task: front:test
-      - task: back:test
+    deps: [ front:test, back:test ]
  
   build:
     deps: [ front:build, back:build ]
